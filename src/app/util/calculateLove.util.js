@@ -49,7 +49,7 @@ function flamesCalculator(name1, name2) {
     case "S":
       return "Siblings";
     default:
-      return "Unknown";
+      return "Friends";
   }
 }
 
