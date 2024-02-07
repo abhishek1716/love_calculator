@@ -7,12 +7,13 @@ import {
 import { useEffect, useState } from "react";
 import mixpanel from "mixpanel-browser";
 import Cookies from "js-cookie";
-import { uuid } from "uuidv4";
+import { v4 as uuidv4 } from "uuid";
 
 export default function Home() {
   useEffect(() => {
     mixpanel.init("7cb7265e653fc1acf95a728761fc8622", {
-      debug: false,
+      debug: true,
+      ignore_dnt: true,
       track_pageview: true,
       persistence: "localStorage",
     });
@@ -21,9 +22,9 @@ export default function Home() {
     if (userInfo) {
       mixpanel.identify(userInfo);
     } else {
-      const uuidv4 = uuid();
-      Cookies.set("loveCalUserId", uuidv4);
-      mixpanel.identify(uuidv4);
+      const uuid = uuidv4();
+      Cookies.set("loveCalUserId", uuid);
+      mixpanel.identify(uuid);
     }
   }, []);
 
@@ -32,6 +33,12 @@ export default function Home() {
   const [answer, setAnswer] = useState("");
 
   const onSubmit = (data) => {
+    if (!data.yourName || !data.partnerName) {
+      setAnswer(
+        "Please Enter your Name and your's Partner Name to get the result"
+      );
+      return;
+    }
     try {
       mixpanel.track("Searched Performed", {
         yourName: data.yourName,
