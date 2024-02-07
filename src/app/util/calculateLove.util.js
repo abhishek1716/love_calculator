@@ -144,7 +144,6 @@ export const CalculateLoveUtil = (yourName, partnerName) => {
 
 export const getLoveCalculatorResult = (result) => {
   const { category, compatibility, love } = result;
-  console.log(category, compatibility, love);
   const messages = {
     Siblings: {
       compatibility: {

@@ -4,17 +4,64 @@ import {
   CalculateLoveUtil,
   getLoveCalculatorResult,
 } from "./util/calculateLove.util";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import mixpanel from "mixpanel-browser";
+import Cookies from "js-cookie";
+import { uuid } from "uuidv4";
 
 export default function Home() {
+  useEffect(() => {
+    console.log("mixpanel started");
+    mixpanel.init("7cb7265e653fc1acf95a728761fc8622", {
+      debug: false,
+      track_pageview: true,
+      persistence: "localStorage",
+    });
+
+    const userInfo = Cookies.get("loveCalUserId");
+    console.log(userInfo);
+    if (userInfo) {
+      mixpanel.identify(userInfo);
+    } else {
+      const uuidv4 = uuid();
+      Cookies.set("loveCalUserId", uuidv4);
+      mixpanel.identify(uuidv4);
+    }
+  }, []);
+
   const { register, handleSubmit, reset } = useForm();
 
   const [answer, setAnswer] = useState("");
 
   const onSubmit = (data) => {
+    try {
+      mixpanel.track("Searched Performed", {
+        yourName: data.yourName,
+        partnerName: data.partnerName,
+      });
+    } catch (e) {
+      console.log(e);
+    }
     const result = CalculateLoveUtil(data.yourName, data.partnerName);
+    try {
+      mixpanel.track("Searched Metrics", {
+        flamesName: result.category,
+        compatibilityScore: data.compatibility,
+        loveScore: data.love,
+      });
+    } catch (e) {
+      console.log(e);
+    }
+    const messageResult = getLoveCalculatorResult(result);
+    try {
+      mixpanel.track("Result", {
+        message: messageResult,
+      });
+    } catch (e) {
+      console.log(e);
+    }
+    setAnswer(messageResult);
 
-    setAnswer(getLoveCalculatorResult(result));
     reset();
   };
 
@@ -74,6 +121,7 @@ export default function Home() {
               type="submit"
               onClick={() => {
                 reset();
+                mixpanel.track("Back To Love Calculator", {});
                 setAnswer("");
               }}
             >
