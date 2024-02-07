@@ -144,6 +144,8 @@ export const CalculateLoveUtil = (yourName, partnerName) => {
 
 export const getLoveCalculatorResult = (result) => {
   const { category, compatibility, love } = result;
+
+  const showCat = category.toUpperCase();
   const messages = {
     Siblings: {
       compatibility: {
@@ -421,8 +423,7 @@ export const getLoveCalculatorResult = (result) => {
   const loveKey =
     love < 30 ? "<30" : love < 65 ? "30-65" : love < 90 ? "65-90" : ">90";
 
-  const messageTemplate =
-    messages[category]?.compatibility[compatibilityKey]?.[loveKey];
+  const messageTemplate = `${showCat} ➜ ${messages[category]?.compatibility[compatibilityKey]?.[loveKey]}`;
   if (!messageTemplate)
     return "No message available for these inputs. Please try again";
 
