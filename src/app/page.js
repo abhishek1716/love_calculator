@@ -1,11 +1,21 @@
 "use client";
 import { useForm } from "react-hook-form";
+import {
+  CalculateLoveUtil,
+  getLoveCalculatorResult,
+} from "./util/calculateLove.util";
+import { useState } from "react";
 
 export default function Home() {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, reset } = useForm();
+
+  const [answer, setAnswer] = useState("");
 
   const onSubmit = (data) => {
-    console.log(data);
+    const result = CalculateLoveUtil(data.yourName, data.partnerName);
+
+    setAnswer(getLoveCalculatorResult(result));
+    reset();
   };
 
   return (
@@ -17,38 +27,60 @@ export default function Home() {
             <path d="M15.5 9L12 12.51 8.5 9 7 10.5l4.5 4.5 4.5-4.5L15.5 9z" />
           </svg>
         </div>
-        <div className="p-12 md:p-24">
-          <div className="flex justify-center text-2xl font-extrabold">
-            <h3>LOVE Calculator</h3>
-          </div>
-          <form onSubmit={handleSubmit(onSubmit)} className="pt-6">
-            <div className="flex items-center text-lg mb-6 md:mb-8">
-              <input
-                type="text"
-                id="yourName"
-                className="bg-gray-100 pl-6 py-2 md:py-4 focus:outline-none w-full"
-                placeholder="Your Name"
-                {...register("yourName")}
-              />
+        {!answer && (
+          <div className="px-6 py-16 md:p-24">
+            <div className="flex justify-center text-2xl font-extrabold">
+              <h3>LOVE Calculator</h3>
             </div>
-            <div className="flex items-center text-lg mb-6 md:mb-8">
-              {" "}
-              <input
-                type="text"
-                id="partnerName"
-                className="bg-gray-100 pl-6 py-2 md:py-4 focus:outline-none w-full"
-                placeholder="Partner Name"
-                {...register("partnerName")}
-              />
+            <form onSubmit={handleSubmit(onSubmit)} className="pt-6">
+              <div className="flex items-center text-lg mb-6 md:mb-8">
+                <input
+                  type="text"
+                  id="yourName"
+                  className="bg-gray-100 pl-6 py-2 md:py-4 focus:outline-none w-full"
+                  placeholder="Your Name"
+                  {...register("yourName")}
+                />
+              </div>
+              <div className="flex items-center text-lg mb-6 md:mb-8">
+                {" "}
+                <input
+                  type="text"
+                  id="partnerName"
+                  className="bg-gray-100 pl-6 py-2 md:py-4 focus:outline-none w-full"
+                  placeholder="Partner Name"
+                  {...register("partnerName")}
+                />
+              </div>
+              <button
+                className="bg-gradient-to-b from-red-400 to-red-900 font-medium p-2 md:p-4 text-white uppercase w-full rounded-md"
+                type="submit"
+              >
+                Calculate Love
+              </button>
+            </form>
+          </div>
+        )}
+        {answer && (
+          <div className="px-6 py-16 md:p-24">
+            <div className="flex justify-center text-2xl font-extrabold">
+              <h3 className="text-xl sm:text-3xl">LOVE Calculator Result</h3>
+            </div>
+            <div className="py-8 sm:py-12 font-sans text-xl sm:text-3xl text-fuchsia-700 font-bold">
+              {answer}
             </div>
             <button
-              className="bg-gradient-to-b from-red-400 to-red-900 font-medium p-2 md:p-4 text-white uppercase w-full"
+              className="text-xs sm:text-xl bg-gradient-to-b from-gray-400 to-gray-900 font-medium p-2 md:p-4 text-white uppercase w-full rounded-md"
               type="submit"
+              onClick={() => {
+                reset();
+                setAnswer("");
+              }}
             >
-              Calculate Love
+              Return to Love Calculator
             </button>
-          </form>
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );
