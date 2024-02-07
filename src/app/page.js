@@ -51,8 +51,8 @@ export default function Home() {
     try {
       mixpanel.track("Searched Metrics", {
         flamesName: result.category,
-        compatibilityScore: data.compatibility,
-        loveScore: data.love,
+        compatibilityScore: result.compatibility,
+        loveScore: result.love,
       });
     } catch (e) {
       console.log(e);
