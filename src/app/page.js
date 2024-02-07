@@ -11,7 +11,6 @@ import { uuid } from "uuidv4";
 
 export default function Home() {
   useEffect(() => {
-    console.log("mixpanel started");
     mixpanel.init("7cb7265e653fc1acf95a728761fc8622", {
       debug: false,
       track_pageview: true,
@@ -19,7 +18,6 @@ export default function Home() {
     });
 
     const userInfo = Cookies.get("loveCalUserId");
-    console.log(userInfo);
     if (userInfo) {
       mixpanel.identify(userInfo);
     } else {

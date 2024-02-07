@@ -420,7 +420,6 @@ export const getLoveCalculatorResult = (result) => {
       : ">90";
   const loveKey =
     love < 30 ? "<30" : love < 65 ? "30-65" : love < 90 ? "65-90" : ">90";
-  console.log(messages[category], compatibilityKey, loveKey);
 
   const messageTemplate =
     messages[category]?.compatibility[compatibilityKey]?.[loveKey];
